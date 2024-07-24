@@ -73,10 +73,13 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Stage changes
+      - name: Configure Git
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Stage changes
+        run: |
           git add .
           git commit -m "chore: prepare release"
 
@@ -88,6 +91,8 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           npm version prerelease --preid=rc -m "chore(release): bump version to %s"
           git push --follow-tags
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
 
       - name: Bump version and create Git tag for master branch
         if: github.ref == 'refs/heads/master'
@@ -103,6 +108,8 @@ jobs:
           echo "New version: $new_version"
           npm version $new_version -m "chore(release): bump version to %s"
           git push --follow-tags
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
 
       - name: Publish to npm (RC)
         if: github.ref == 'refs/heads/release'
@@ -121,7 +128,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         with:
           tag_name: ${{ steps.bump_version_rc.outputs.new_tag || steps.bump_version_master.outputs.new_tag }}
           release_name: Release ${{ steps.bump_version_rc.outputs.new_tag || steps.bump_version_master.outputs.new_tag }}
@@ -132,7 +139,7 @@ jobs:
         if: github.ref == 'refs/heads/release' || github.ref == 'refs/heads/master'
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./dist
