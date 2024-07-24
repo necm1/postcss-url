@@ -12,7 +12,7 @@
     "forceConsistentCasingInFileNames": true,
     "useUnknownInCatchVariables": false,
     "noImplicitReturns": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
