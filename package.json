@@ -1,13 +1,14 @@
 {
   "name": "@necm1/postcss-url",
-  "version": "0.0.2",
+  "version": "0.0.2-beta",
   "description": "A PostCSS plugin for processing URLs in CSS files.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rollup -c",
-    "prepublishOnly": "npm run build",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build",
     "lint": "eslint 'src/**/*.ts'",
     "lint:fix": "eslint 'src/**/*.ts' --fix",
     "format": "prettier --write 'src/**/*.ts'",
