@@ -1,6 +1,6 @@
 {
   "name": "@necm1/postcss-url",
-  "version": "0.0.2-beta",
+  "version": "0.0.2-beta-1",
   "description": "A PostCSS plugin for processing URLs in CSS files.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
