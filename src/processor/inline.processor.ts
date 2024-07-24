@@ -1,6 +1,7 @@
 import path from 'path';
 import { getFile } from '../util/get-file.util';
-import { AbstractProcessor } from './abstract-processor';
+import { AbstractProcessor } from './abstract.processor';
+import { URLProcessorOptions } from '../interface/url-processor.interface';
 
 /**
  * Processor for inlining files as base64.
@@ -8,9 +9,9 @@ import { AbstractProcessor } from './abstract-processor';
  * @extends AbstractProcessor
  */
 export class InlineProcessor extends AbstractProcessor {
-  private options: any;
+  private options: URLProcessorOptions;
 
-  constructor(options: any) {
+  constructor(options: URLProcessorOptions) {
     super();
     this.options = options;
   }
@@ -24,7 +25,7 @@ export class InlineProcessor extends AbstractProcessor {
     const processedFiles: string[] = [];
 
     for (const filePath of filePaths) {
-      const content = await getFile(filePath, this.options.basePath);
+      const content = await getFile(filePath, this.options.basePath || '');
       const base64Content = content.toString('base64');
       const mimeType = this.getMimeType(filePath);
       processedFiles.push(`data:${mimeType};base64,${base64Content}`);
@@ -39,13 +40,21 @@ export class InlineProcessor extends AbstractProcessor {
    */
   private getMimeType(filePath: string): string {
     const ext = path.extname(filePath).slice(1);
+
     const mimeTypes: { [key: string]: string } = {
       jpg: 'image/jpeg',
       jpeg: 'image/jpeg',
       png: 'image/png',
       gif: 'image/gif',
       svg: 'image/svg+xml',
+      woff: 'font/woff',
+      woff2: 'font/woff2',
+      eot: 'application/vnd.ms-fontobject',
+      ttf: 'font/ttf',
+      webp: 'image/webp',
+      otf: 'font/otf',
     };
+
     return mimeTypes[ext] || 'application/octet-stream';
   }
 }

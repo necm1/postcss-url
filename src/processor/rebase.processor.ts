@@ -1,6 +1,7 @@
 import path from 'path';
 import { resolvePath, getRelativePath } from '../util/paths.util';
-import { AbstractProcessor } from './abstract-processor';
+import { AbstractProcessor } from './abstract.processor';
+import { URLProcessorOptions } from '../interface/url-processor.interface';
 
 /**
  * Processor for rebasing file paths.
@@ -8,9 +9,9 @@ import { AbstractProcessor } from './abstract-processor';
  * @extends AbstractProcessor
  */
 export class RebaseProcessor extends AbstractProcessor {
-  private options: any;
+  private options: URLProcessorOptions;
 
-  constructor(options: any) {
+  constructor(options: URLProcessorOptions) {
     super();
     this.options = options;
   }
@@ -21,6 +22,12 @@ export class RebaseProcessor extends AbstractProcessor {
    * @returns {Promise<string[]>} A list of rebased file paths.
    */
   public async process(filePaths: string[]): Promise<string[]> {
+    if (!this.options.assetsPath || !this.options.basePath) {
+      throw new Error(
+        'assetsPath and basePath are required for rebase processor',
+      );
+    }
+
     const processedFiles: string[] = [];
     for (const filePath of filePaths) {
       const absolutePath = await resolvePath(this.options.basePath, filePath);

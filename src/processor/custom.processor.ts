@@ -1,4 +1,4 @@
-import { AbstractProcessor } from './abstract-processor';
+import { AbstractProcessor } from './abstract.processor';
 
 /**
  * Processor for custom processing.

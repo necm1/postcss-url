@@ -3,8 +3,8 @@
  * @interface URLProcessorOptions
  */
 export interface URLProcessorOptions {
-  basePath: string | string[];
-  assetsPath: string;
+  basePath?: string | string[];
+  assetsPath?: string;
   useHash?: boolean;
   hashOptions?: {
     length?: number;

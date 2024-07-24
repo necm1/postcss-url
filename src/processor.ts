@@ -1,5 +1,6 @@
 import { ProcessorOptions } from './interface/processor.interface';
-import { AbstractProcessor } from './processor/abstract-processor';
+import { AbstractProcessor } from './processor/abstract.processor';
+import { resolve } from 'path';
 
 /**
  * Main processor class that dynamically loads and executes the specified processor.
@@ -29,23 +30,18 @@ export class Processor {
         },
       };
     }
+
+    const processorPath = resolve(__dirname, `processor/${type}.processor`);
+
     switch (type) {
       case 'copy':
-        return new (require('./processor/copy.processor').CopyProcessor)(
-          options,
-        );
+        return new (require(processorPath).CopyProcessor)(options);
       case 'custom':
-        return new (require('./processor/custom.processor').CustomProcessor)(
-          options,
-        );
+        return new (require(processorPath).CustomProcessor)(options);
       case 'inline':
-        return new (require('./processor/inline.processor').InlineProcessor)(
-          options,
-        );
+        return new (require(processorPath).InlineProcessor)(options);
       case 'rebase':
-        return new (require('./processor/rebase.processor').RebaseProcessor)(
-          options,
-        );
+        return new (require(processorPath).RebaseProcessor)(options);
       default:
         throw new Error(`Unknown processor type: ${type}`);
     }

@@ -4,7 +4,7 @@ import { URLProcessorOptions } from '../interface/url-processor.interface';
 import { generateHash } from '../util/hash.util';
 import { matchExtensions } from '../util/match-options.util';
 import { getFile } from '../util/get-file.util';
-import { AbstractProcessor } from './abstract-processor';
+import { AbstractProcessor } from './abstract.processor';
 
 /**
  * Processor for copying files.
@@ -44,6 +44,12 @@ export class CopyProcessor extends AbstractProcessor {
    * @returns {Promise<string>} The path of the copied file.
    */
   private async copyFile(filePath: string): Promise<string> {
+    if (!this.options.assetsPath || !this.options.basePath) {
+      throw new Error(
+        'assetsPath and basePath are required for copy processor',
+      );
+    }
+
     const content = await getFile(filePath, this.options.basePath);
     const fileName = path.basename(filePath);
 
