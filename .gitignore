@@ -1,0 +1,49 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Build directory
+dist/
+
+# TypeScript
+*.tsbuildinfo
+
+# Environment variables
+.env
+
+# IDE specific files
+.vscode/
+.idea/
+
+# Rollup cache
+.rollup.cache/
+
+# MacOS specific
+.DS_Store
+
+# Ignore compiled JS files
+*.js
+*.js.map
+
+# Ignore compiled CSS files
+*.css
+*.css.map
+
+# Ignore coverage reports
+coverage/
+
+# Ignore temporary files
+*.tmp
+*.swp
+*.bak
+*.pid
+*.seed
+*.pid.lock
