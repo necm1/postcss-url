@@ -12,4 +12,6 @@ export interface URLProcessorOptions {
   };
   filterExtensions?: string[];
   fileNameFormat?: string;
+  from?: string;
+  to?: string;
 }
