@@ -10,9 +10,6 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 
-# Build directory
-dist/
-
 # TypeScript
 *.tsbuildinfo
 
