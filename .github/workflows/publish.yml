@@ -1,14 +1,58 @@
-name: Publish
+name: Publish and Release
 
 on:
   push:
     branches:
       - master
+      - release
 
 jobs:
-  publish:
-    name: Publish to npm
+  lint:
+    name: Lint Code
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Prettier
+        run: npm run format -- --check
+
+  build:
+    name: Build Project
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+  publish:
+    name: Publish and Release
+    runs-on: ubuntu-latest
+    needs: build
 
     steps:
       - name: Checkout repository
@@ -23,14 +67,60 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Bump version and create Git tag
+      - name: Bump version and create Git tag for release branch
+        if: github.ref == 'refs/heads/release'
+        id: bump_version_rc
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          npm version patch -m "chore(release): bump version to %s"
+          npm version prerelease --preid=rc -m "chore(release): bump version to %s"
           git push --follow-tags
 
-      - name: Publish to npm
-        run: npm publish
+      - name: Bump version and create Git tag for master branch
+        if: github.ref == 'refs/heads/master'
+        id: bump_version_master
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          # Remove the -rc tag from the version
+          current_version=$(node -p "require('./package.json').version")
+          new_version=$(echo $current_version | sed 's/-rc.*//')
+          echo "Current version: $current_version"
+          echo "New version: $new_version"
+          npm version $new_version -m "chore(release): bump version to %s"
+          git push --follow-tags
+
+      - name: Publish to npm (RC)
+        if: github.ref == 'refs/heads/release'
+        run: npm publish --tag rc
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to npm (Stable)
+        if: github.ref == 'refs/heads/master'
+        run: npm publish --tag latest
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        if: github.ref == 'refs/heads/release' || github.ref == 'refs/heads/master'
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.bump_version_rc.outputs.new_tag || steps.bump_version_master.outputs.new_tag }}
+          release_name: Release ${{ steps.bump_version_rc.outputs.new_tag || steps.bump_version_master.outputs.new_tag }}
+          draft: false
+          prerelease: ${{ github.ref == 'refs/heads/release' }}
+
+      - name: Upload Release Asset
+        if: github.ref == 'refs/heads/release' || github.ref == 'refs/heads/master'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist
+          asset_name: dist
+          asset_content_type: application/zip

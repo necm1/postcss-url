@@ -1,5 +1,12 @@
 # PostCSS URL (Optimized)
 
+![NPM Collaborators](https://img.shields.io/npm/collaborators/%40necm1%2Fpostcss-url)
+![NPM Downloads](https://img.shields.io/npm/dw/%40necm1%2Fpostcss-url)
+![NPM License](https://img.shields.io/npm/l/%40necm1%2Fpostcss-url)
+![NPM Version](https://img.shields.io/npm/v/%40necm1%2Fpostcss-url)
+![NPM Type Definitions](https://img.shields.io/npm/types/%40necm1%2Fpostcss-url)
+![npm bundle size](https://img.shields.io/bundlephobia/min/%40necm1%2Fpostcss-url)
+
 This project is an optimized version of the original [postcss-url](https://github.com/postcss/postcss-url) plugin. The original code was outdated, so updates have been made to improve performance, readability, and maintainability. This version provides the same core functionalities as the original but has been modernized to keep up with current best practices and technologies.
 
 ## Changes and Improvements
@@ -150,7 +157,7 @@ const options = [
   { filterExtensions: ['.svg'], url: 'inline' },
   { filterExtensions: ['.gif'], url: 'rebase' },
   // using custom function to build url
-  { customUrl: (asset) => `https://cdn.url/${asset.url}` },
+  { url: (asset) => `https://cdn.url/${asset.url}` },
 ];
 
 postcss()
