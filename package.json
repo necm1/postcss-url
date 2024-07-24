@@ -24,7 +24,10 @@
       "prettier --write"
     ]
   },
-  "repository": "https://github.com/necm1/postcss-url.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/necm1/postcss-url.git"
+  },
   "author": "necm1 <necmi.m.hasan@outlook.de>",
   "license": "MIT",
   "devDependencies": {
