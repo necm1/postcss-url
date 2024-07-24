@@ -1,6 +1,5 @@
-import { ESLint } from 'eslint';
-
-export default new ESLint.Config({
+export default {
+  ignores: ['node_modules', 'dist'],
   env: {
     browser: true,
     es2021: true,
@@ -22,4 +21,4 @@ export default new ESLint.Config({
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
   },
-});
+};
