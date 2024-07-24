@@ -73,6 +73,12 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
+      - name: Stage changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+
       - name: Bump version and create Git tag for release branch
         if: github.ref == 'refs/heads/release'
         id: bump_version_rc
@@ -88,6 +94,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
           # Remove the -rc tag from the version
           current_version=$(node -p "require('./package.json').version")
           new_version=$(echo $current_version | sed 's/-rc.*//')
