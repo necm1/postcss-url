@@ -1,0 +1,49 @@
+{
+  "name": "postcss-url",
+  "version": "0.0.1",
+  "description": "A PostCSS plugin for processing URLs in CSS files.",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "prepublishOnly": "npm run build",
+    "lint": "eslint 'src/**/*.ts'",
+    "lint:fix": "eslint 'src/**/*.ts' --fix",
+    "format": "prettier --write 'src/**/*.ts'",
+    "prepare": "husky"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "repository": "https://github.com/necm1/postcss-url.git",
+  "author": "necm1 <necmi.m.hasan@outlook.de>",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "eslint": "^9.7.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^9.1.1",
+    "lint-staged": "^15.2.7",
+    "pinst": "^3.0.0",
+    "prettier": "^3.3.3",
+    "rollup": "^4.19.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "tslib": "^2.6.3",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "postcss": "^8.4.39"
+  }
+}
